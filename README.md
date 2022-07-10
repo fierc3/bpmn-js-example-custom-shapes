@@ -1,9 +1,11 @@
 > :warning: Should custom elements be serialized within the BPMN 2.0 diagram? If that is the case, this example is not what you are looking for. Checkout our [:notebook: custom elements guide](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements) to learn how to build custom elements in a BPMN 2.0 compatible way.
 
 
-# bpmn-js example: Custom Shapes
+# Risk
 
 This advanced example shows how to extend [bpmn-js](https://github.com/bpmn-io/bpmn-js) with new shapes and connections that are __not part of the BPMN 2.0 diagram / incompatible with the BPMN 2.0 standard__. Consult our [:notebook: custom elements guide](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements) to learn how to extend the toolkit in a BPMN 2.0 compliant way.
+
+Modified to show behaviour of custom shape "Risk".
 
 ## About
 
