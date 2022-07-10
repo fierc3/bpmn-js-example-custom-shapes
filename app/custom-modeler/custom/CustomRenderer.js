@@ -10,7 +10,8 @@ import {
 import {
   append as svgAppend,
   attr as svgAttr,
-  create as svgCreate
+  create as svgCreate,
+  classes as svgClasses
 } from 'tiny-svg';
 
 var COLOR_GREEN = '#52B415',
@@ -26,7 +27,10 @@ export default function CustomRenderer(eventBus, styles) {
 
   var computeStyle = styles.computeStyle;
 
-  this.drawTriangle = function(p, side) {
+  this.drawrisk = function(p, side, element) {
+    console.log("p",p)
+    console.log("element",element)
+    console.log("riskdId",element.businessObject.get("riskId"))
     var halfSide = side / 2,
         points,
         attrs;
@@ -34,9 +38,9 @@ export default function CustomRenderer(eventBus, styles) {
     points = [ halfSide, 0, side, side, 0, side ];
 
     attrs = computeStyle(attrs, {
-      stroke: COLOR_GREEN,
+      stroke: COLOR_RED,
       strokeWidth: 2,
-      fill: COLOR_GREEN
+      fill: COLOR_RED
     });
 
     var polygon = svgCreate('polygon');
@@ -49,64 +53,37 @@ export default function CustomRenderer(eventBus, styles) {
 
     svgAppend(p, polygon);
 
+    var text = svgCreate('text'); 
+
+    svgAttr(text, {
+      fill: COLOR_RED,
+      transform: 'translate(1, 60)'
+    });
+
+    svgClasses(text).add('djs-label'); 
+  
+    //get risk display name and set it here
+    svgAppend(text, document.createTextNode(element.businessObject.get("riskId") || "Risk")); 
+  
+    svgAppend(p, text);
+
     return polygon;
   };
 
-  this.getTrianglePath = function(element) {
+  this.getriskPath = function(element) {
     var x = element.x,
         y = element.y,
         width = element.width,
         height = element.height;
 
-    var trianglePath = [
+    var riskPath = [
       ['M', x + width / 2, y],
       ['l', width / 2, height],
       ['l', -width, 0 ],
       ['z']
     ];
 
-    return componentsToPath(trianglePath);
-  };
-
-  this.drawCircle = function(p, width, height) {
-    var cx = width / 2,
-        cy = height / 2;
-
-    var attrs = computeStyle(attrs, {
-      stroke: COLOR_YELLOW,
-      strokeWidth: 4,
-      fill: COLOR_YELLOW
-    });
-
-    var circle = svgCreate('circle');
-
-    svgAttr(circle, {
-      cx: cx,
-      cy: cy,
-      r: Math.round((width + height) / 4)
-    });
-
-    svgAttr(circle, attrs);
-
-    svgAppend(p, circle);
-
-    return circle;
-  };
-
-  this.getCirclePath = function(shape) {
-    var cx = shape.x + shape.width / 2,
-        cy = shape.y + shape.height / 2,
-        radius = shape.width / 2;
-
-    var circlePath = [
-      ['M', cx, cy],
-      ['m', 0, -radius],
-      ['a', radius, radius, 0, 1, 1, 0, 2 * radius],
-      ['a', radius, radius, 0, 1, 1, 0, -2 * radius],
-      ['z']
-    ];
-
-    return componentsToPath(circlePath);
+    return componentsToPath(riskPath);
   };
 
   this.drawCustomConnection = function(p, element) {
@@ -149,24 +126,16 @@ CustomRenderer.prototype.canRender = function(element) {
 CustomRenderer.prototype.drawShape = function(p, element) {
   var type = element.type;
 
-  if (type === 'custom:triangle') {
-    return this.drawTriangle(p, element.width);
-  }
-
-  if (type === 'custom:circle') {
-    return this.drawCircle(p, element.width, element.height);
+  if (type === 'custom:risk') {
+    return this.drawrisk(p, element.width, element);
   }
 };
 
 CustomRenderer.prototype.getShapePath = function(shape) {
   var type = shape.type;
 
-  if (type === 'custom:triangle') {
-    return this.getTrianglePath(shape);
-  }
-
-  if (type === 'custom:circle') {
-    return this.getCirclePath(shape);
+  if (type === 'custom:risk') {
+    return this.getriskPath(shape);
   }
 };
 

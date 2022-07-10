@@ -23,15 +23,15 @@ The example provides a [custom modeler](app/custom-modeler/index.js). After inst
 // add custom elements
 var customElements = [
   {
-    type: "custom:triangle",
-    id: "CustomTriangle_1",
+    type: "custom:risk",
+    id: "customRisk_1",
     x: 300,
     y: 300
   },
   {
     type: "custom:connection",
     id: "CustomConnection_1",
-    source: "CustomTriangle_1",
+    source: "customRisk_1",
     target: "Task_1",
     waypoints: [
       // ...

@@ -1,3 +1,4 @@
+import { indexOf } from 'diagram-js/lib/util/Collections';
 import {
   assign
 } from 'min-dash';
@@ -25,25 +26,47 @@ PaletteProvider.$inject = [
 ];
 
 
-PaletteProvider.prototype.getPaletteEntries = function(element) {
+PaletteProvider.prototype.getPaletteEntries = function (element) {
 
-  var actions  = {},
-      create = this._create,
-      elementFactory = this._elementFactory,
-      spaceTool = this._spaceTool,
-      lassoTool = this._lassoTool;
+  var actions = {},
+    create = this._create,
+    elementFactory = this._elementFactory,
+    spaceTool = this._spaceTool,
+    lassoTool = this._lassoTool;
 
 
   function createAction(type, group, className, title, options) {
 
     function createListener(event) {
+      console.log("event", event)
       var shape = elementFactory.createShape(assign({ type: type }, options));
 
       if (options) {
         shape.businessObject.di.isExpanded = options.isExpanded;
       }
 
-      create.start(event, shape);
+      if ((String)(event.srcElement.className).includes("-risk")) {
+        console.log("RISK SELECTED", shape.businessObject)
+
+
+
+        if (confirm('Do you want to create a new risk?')) {
+          // Save it!
+          console.log('New Risk Form Here');
+          let a = prompt("display NEW form here", "risk name");
+          shape.businessObject.set("riskId", a)
+          create.start(event, shape);
+        } else {
+          console.log('Edit Risk Form Here');
+          shape.businessObject.set("riskId", "Some Edited Risk")
+          create.start(event, shape);
+        }
+
+      } else {
+        create.start(event, shape);
+      }
+
+
     }
 
     var shortType = type.replace(/^bpmn:/, '');
@@ -64,11 +87,8 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
   }
 
   assign(actions, {
-    'custom-triangle': createAction(
-      'custom:triangle', 'custom', 'icon-custom-triangle'
-    ),
-    'custom-circle': createAction(
-      'custom:circle', 'custom', 'icon-custom-circle'
+    'custom-risk': createAction(
+      'custom:risk', 'custom', 'icon-custom-risk', 'Create Risk'
     ),
     'custom-separator': {
       group: 'custom',
@@ -79,7 +99,7 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       className: 'bpmn-icon-lasso-tool',
       title: 'Activate the lasso tool',
       action: {
-        click: function(event) {
+        click: function (event) {
           lassoTool.activateSelection(event);
         }
       }
@@ -89,7 +109,7 @@ PaletteProvider.prototype.getPaletteEntries = function(element) {
       className: 'bpmn-icon-space-tool',
       title: 'Activate the create/remove space tool',
       action: {
-        click: function(event) {
+        click: function (event) {
           spaceTool.activateSelection(event);
         }
       }

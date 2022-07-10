@@ -113,7 +113,7 @@ CustomElementFactory.$inject = [
  * @example
  *
  * var shapes = {
- *   triangle: { width: 40, height: 40 },
+ *   risk: { width: 40, height: 40 },
  *   rectangle: { width: 100, height: 20 }
  * };
  *
@@ -127,8 +127,7 @@ CustomElementFactory.$inject = [
 CustomElementFactory.prototype._getCustomElementSize = function(type) {
   var shapes = {
     __default: { width: 100, height: 80 },
-    'custom:triangle': { width: 40, height: 40 },
-    'custom:circle': { width: 140, height: 140 }
+    'custom:risk': { width: 40, height: 40 },
   };
 
   return shapes[type] || shapes.__default;
